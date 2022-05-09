@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 @Service
@@ -18,7 +19,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User validateUser(String email, String password) throws IdAuthException {
-        return null;
+        if (email != null) email = email.toLowerCase();
+        return userRepository.findByEmailAndPassword(email, password);
     }
 
     @Override

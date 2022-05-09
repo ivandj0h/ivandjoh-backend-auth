@@ -3,6 +3,7 @@ package com.ivandjoh.backendauth.repositories;
 import com.ivandjoh.backendauth.domain.User;
 import com.ivandjoh.backendauth.exceptions.IdAuthException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,6 +20,8 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String SQL_CREATE = "INSERT INTO ID_USERS(USER_ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD) VALUES(NEXTVAL('ID_USERS_SEQ'), ?, ?, ?, ?)";
     private static final String SQL_COUNT_BY_EMAIL = "SELECT COUNT(*) FROM ID_USERS WHERE EMAIL = ?";
     private static final String SQL_FIND_BY_ID = "SELECT USER_ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD " + "FROM ID_USERS WHERE USER_ID = ?";
+
+    private static final String SQL_FIND_BY_EMAIL = "SELECT USER_ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD " + "FROM ID_USERS WHERE EMAIL = ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -45,7 +48,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User findByEmailAndPassword(String email, String password) throws IdAuthException {
-        return null;
+        try {
+            User user = jdbcTemplate.queryForObject(SQL_FIND_BY_EMAIL, new Object[]{email}, userRowMapper);
+            if (!password.equals(user.getPassword()))
+                throw new IdAuthException("Invalid Email or Password!.");
+            return user;
+        }catch (EmptyResultDataAccessException e) {
+            throw new IdAuthException("Invalid Email or Password!.");
+        }
     }
 
     @Override
