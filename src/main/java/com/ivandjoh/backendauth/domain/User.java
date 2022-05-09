@@ -2,26 +2,26 @@ package com.ivandjoh.backendauth.domain;
 
 public class User {
 
-    private Integer id;
+    private Integer userId;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
 
-    public User(Integer id, String firstName, String lastName, String email, String password) {
-        this.id = id;
+    public User(Integer userId, String firstName, String lastName, String email, String password) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getFirstName() {
